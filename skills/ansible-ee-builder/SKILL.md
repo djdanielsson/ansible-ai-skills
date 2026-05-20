@@ -121,12 +121,8 @@ podman push "quay.io/myorg/automation-ee:sha-${COMMIT_SHA}"
 # Validate EE definition
 ansible-builder create --verbosity 3
 
-# Check version pinning
-grep -E "^  - name: [a-z]" requirements.yml | while read line; do
-  if ! echo "$line" | grep -q "version:"; then
-    echo "FAIL: Unpinned collection: $line"
-  fi
-done
+# Check version pinning (requires yq)
+yq -e '.collections[] | select(.version == null) | .name' requirements.yml 2>/dev/null && echo "FAIL: Unpinned collections found" || echo "OK: All collections pinned"
 
 # Check base image is official
 grep "EE_BASE_IMAGE" execution-environment.yml

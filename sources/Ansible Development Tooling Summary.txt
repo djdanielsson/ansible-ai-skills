@@ -59,7 +59,7 @@ To create an isolated development environment for a newly cloned collection and 
 Bash
 git clone https://github.com/namespace/collection-name
 cd collection-name
-ade install -e. --venv.venv
+ade install -e . --venv .venv
 
 .18
 The tool enforces strict hygiene. If a user inadvertently attempts to utilize the development tools while a legacy global path (such as ~/.ansible/collections) is populated, ade will trigger a critical error, warning the user that the environment is not isolated and prompting them to remove the global state.22 This strict enforcement definitively eradicates the environmental discrepancies that historically plagued infrastructure teams.
@@ -259,7 +259,7 @@ To sign a project (assuming a valid GPG key exists in the developer's default ke
 
 
 Bash
-ansible-sign project gpg-sign.
+ansible-sign project gpg-sign .
 
 If successful, the CLI outputs a success message indicating the signature creation.41 In automated pipelines, setting the ANSIBLE_SIGN_GPG_PASSPHRASE environment variable bypasses interactive prompts.41
 To verify the integrity of a signed project prior to execution:
@@ -270,7 +270,7 @@ To verify the integrity of a signed project prior to execution:
 
 
 Bash
-ansible-sign project gpg-verify.
+ansible-sign project gpg-verify .
 
 .41
 The CLI utilizes standardized, stable exit codes to allow programmatic decision-making in CI/CD workflows. The following table delineates the execution states:
@@ -443,7 +443,7 @@ Tool
 	ansible-dev-environment
 	Isolated, pip-like dependency management for collections.
 	Day 0 workspace setup; preventing global dependency pollution via virtual environments.
-	ade install -e. --venv.venv
+	ade install -e . --venv .venv
 	ansible-builder
 	Execution Environment (EE) immutable image creation via declarative YAML.
 	CI/CD pipelines constructing the runtime containers for deployment nodes.
@@ -459,7 +459,7 @@ Tool
 	ansible-sign
 	Cryptographic verification of project files via GPG detached signatures.
 	Release management and pipeline execution gating to ensure supply chain integrity.
-	ansible-sign project gpg-verify.
+	ansible-sign project gpg-verify .
 	molecule
 	Ansible-native infrastructure integration testing and lifecycle management.
 	Collection CI pipelines requiring hypervisor, container, or cloud API instantiation.
