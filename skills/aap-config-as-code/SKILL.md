@@ -4,7 +4,9 @@ description: >-
   AAP Configuration as Code using the infra.aap_configuration collection. Use
   when generating or reviewing declarative CaC for Ansible Automation Platform
   2.5+. Covers repository topology, dependency sequencing, credential
-  management, and coding standards.
+  management, coding standards, version-locked deployments, environment
+  promotion, and constitutional compliance. Referenced by the
+  ansible-architect orchestrator.
 ---
 # AAP Configuration as Code
 
@@ -41,11 +43,11 @@ Never write imperative tasks to create objects. Use the `dispatch` role to aggre
 
 ## Coding Standards
 
-* **File extension:** `.yml` only. Never `.yaml`.
+* **File extension:** `.yml` for all Ansible content files (playbooks, roles, vars, tasks). Non-Ansible configs (e.g., `.pre-commit-config.yaml`) may use `.yaml` per tool requirements.
 * **Jinja whitespace:** `{{ var }}` not `{{var}}`.
 * **Paths:** No trailing slashes (`my_path: /foo` not `/foo/`).
-* **Naming:** Underscore separators (`_`) in role/playbook names. Dashes are misinterpreted by Python.
-* **Task names:** Start with capital letter for log readability.
+* **Naming:** Underscore separators (`_`) in variable names. Dashes in Jinja/Python expressions are parsed as subtraction. Role and playbook filenames may use dashes or underscores per project convention.
+* **Task names:** Sentence case, descriptive of desired state (aligned with `ansible-code-style` skill).
 * **Python interpreter:** Explicit `ansible_python_interpreter: /usr/bin/python3.9` or higher.
 
 ## Variable Placement
@@ -102,3 +104,67 @@ Use YAML comments only for:
 - Explaining `!unsafe` usage and why it's needed
 - Cross-environment reference notes
 - Dependency explanations that aren't obvious from naming
+
+## Version-Locked Deployments
+
+AAP projects and job templates must reference specific CalVer tags, never `main` or `latest`:
+
+```yaml
+controller_projects:
+  - name: "Automation Collection - Prod"
+    scm_url: "https://github.com/org/automation-collection"
+    scm_branch: "26.1.5-0"
+    scm_update_on_launch: false
+
+controller_execution_environments:
+  - name: "Automation EE - 26.1.5-0"
+    image: "quay.io/org/automation-ee:26.1.5-0"
+    pull: "missing"
+```
+
+Use image digests in production for ultimate immutability:
+
+```yaml
+image: "quay.io/org/automation-ee@sha256:abc123..."
+```
+
+## Environment Promotion
+
+CaC repositories use per-environment variable files:
+
+```
+group_vars/
+  aap_dev/       # Development AAP objects
+  aap_qa/        # QA AAP objects (version-locked)
+  aap_prod/      # Production AAP objects (version-locked + digest)
+```
+
+Promotion workflow:
+1. Update dev variables (may reference `main` branch)
+2. Create CalVer tag
+3. Update QA variables to reference tag
+4. After QA validation, update prod variables
+5. Apply via `dispatch` role
+
+## CI/CD Integration
+
+CaC repositories include these GitHub Actions workflows:
+
+| Workflow | What It Does |
+|----------|-------------|
+| pre-commit | YAML lint, secret detection |
+| ansible-lint | Production profile validation |
+| pr-validation | Environment change detection, idempotency |
+| deploy-dev | Manual deployment with dry-run support |
+
+Production changes require additional gates:
+- Approval comments on PR
+- No test data in prod config
+- All secrets reference external stores
+
+## Constitutional Compliance
+
+- **GitOps First:** All AAP configuration in Git, no manual UI changes
+- **Separation of Duties:** Platform team owns CaC, app teams request via PR
+- **Atomic Promotion:** EE + Code + CaC promoted together at same version
+- **Zero-Trust:** Credentials reference external stores, never inline values

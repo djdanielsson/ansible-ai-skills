@@ -2,9 +2,10 @@
 name: ansible-module-dev
 description: >-
   Custom Ansible module development in Python. Use when writing, reviewing, or
-  optimizing custom Ansible modules. Covers declarative design, argument_spec
-  validation, idempotency with check mode and diff support, security posture,
-  and testing patterns.
+  optimizing custom Ansible modules, filter plugins, lookup plugins, or module
+  utilities. Covers declarative design, argument_spec validation, idempotency
+  with check mode and diff support, security posture, testing patterns, and
+  Python code style. Referenced by the ansible-architect orchestrator.
 ---
 # Custom Ansible Module Development
 
@@ -92,6 +93,42 @@ def main():
   6. Remove/revert and verify
 
 * **Network modules:** Execute on control node with persistent sessions. Return `before`, `after`, and `commands` keys.
+
+## Python Code Style
+
+Follow the `ansible-code-style` skill for Python formatting:
+
+* `black --line-length 100` for formatting
+* `isort` for import ordering
+* `flake8` and `pylint` for linting
+* `bandit` for security analysis
+* Type hints on all functions
+* Docstrings on all public functions
+
+### Import Order
+
+```python
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+import os
+import sys
+from typing import Dict, List, Optional
+
+from ansible.module_utils.basic import AnsibleModule
+
+from ansible_collections.myorg.collection.plugins.module_utils import helper
+```
+
+## CI Integration
+
+Modules must pass these CI checks before merge:
+
+* `ansible-test sanity` -- validates module structure and documentation
+* `pytest` with coverage -- unit tests for all code paths
+* `molecule test` -- integration tests verify real behavior
+* `ansible-lint --profile production` -- style and best practice checks
+* `bandit` -- security scanning for Python code
 
 ## Documentation Standards
 

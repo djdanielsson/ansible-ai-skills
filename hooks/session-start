@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Support both standalone layout (skills/ at project root) and submodule layout (.skills/skills/)
+SKILL_FILE=""
+CANDIDATES=(
+  "$PROJECT_ROOT/skills/using-ansible-superpowers/SKILL.md"
+  "$PROJECT_ROOT/.skills/skills/using-ansible-superpowers/SKILL.md"
+)
+for candidate in "${CANDIDATES[@]}"; do
+  if [[ -f "$candidate" ]]; then
+    SKILL_FILE="$candidate"
+    break
+  fi
+done
+
+if [[ -z "$SKILL_FILE" ]]; then
+  echo "ERROR: Bootstrap skill not found. Searched:" >&2
+  for candidate in "${CANDIDATES[@]}"; do
+    echo "  $candidate" >&2
+  done
+  exit 1
+fi
+
+using_superpowers_content=$(cat "$SKILL_FILE")
+
+escape_for_json() {
+  local text="$1"
+  text="${text//\\/\\\\}"
+  text="${text//\"/\\\"}"
+  text="${text//$'\n'/\\n}"
+  text="${text//$'\t'/\\t}"
+  text="${text//$'\r'/}"
+  printf '%s' "$text"
+}
+
+using_superpowers_escaped=$(escape_for_json "$using_superpowers_content")
+
+warning_message="WARNING: You MUST read and follow the using-ansible-superpowers skill above before taking any action. If you skip it, you will produce incorrect Ansible code. LLMs have a 12% pass rate on Ansible tasks without skill guidance."
+warning_escaped=$(escape_for_json "$warning_message")
+
+session_context="<EXTREMELY-IMPORTANT>\nYou have Ansible Superpowers.\n\n**Below is the full content of your 'using-ansible-superpowers' skill - your introduction to using skills. For all other skills, read from the skills/ directory:**\n\n${using_superpowers_escaped}\n\n${warning_escaped}\n</EXTREMELY-IMPORTANT>"
+
+platform="${CURSOR_PLATFORM:-cursor}"
+
+case "$platform" in
+  claude-code)
+    cat <<JSONEOF
+{
+  "hookSpecificOutput": {
+    "hookEventName": "SessionStart",
+    "additionalContext": "${session_context}"
+  }
+}
+JSONEOF
+    ;;
+  *)
+    cat <<JSONEOF
+{
+  "additional_context": "${session_context}"
+}
+JSONEOF
+    ;;
+esac
