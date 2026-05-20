@@ -43,7 +43,7 @@ Never write imperative tasks to create objects. Use the `dispatch` role to aggre
 
 ## Coding Standards
 
-* **File extension:** `.yml` only. Never `.yaml`.
+* **File extension:** `.yml` for all Ansible content files (playbooks, roles, vars, tasks). Non-Ansible configs (e.g., `.pre-commit-config.yaml`) may use `.yaml` per tool requirements.
 * **Jinja whitespace:** `{{ var }}` not `{{var}}`.
 * **Paths:** No trailing slashes (`my_path: /foo` not `/foo/`).
 * **Naming:** Underscore separators (`_`) in variable names. Dashes in Jinja/Python expressions are parsed as subtraction. Role and playbook filenames may use dashes or underscores per project convention.

@@ -32,7 +32,7 @@ escape_for_json() {
   text="${text//$'\n'/\\n}"
   text="${text//$'\t'/\\t}"
   text="${text//$'\r'/}"
-  echo "$text"
+  printf '%s' "$text"
 }
 
 using_superpowers_escaped=$(escape_for_json "$using_superpowers_content")
