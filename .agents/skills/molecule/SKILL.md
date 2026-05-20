@@ -1,0 +1,120 @@
+---
+name: ansible-molecule
+description: >-
+  Ansible Molecule testing best practices. Use when writing or reviewing
+  Molecule test scenarios. Covers functional verification over state checking,
+  ansible-native testing architecture, inventory optimization, and negative
+  testing patterns.
+---
+# Ansible Molecule Testing
+
+## Core Rule: Functional Verification Over State Checking
+
+The highest priority is **functional verification** — proving that business logic or security policy is actually operational, not merely that a file exists or a service is "started."
+
+### When state checking is acceptable
+- Testing custom Ansible modules (verifying a file was created or package installed is fine)
+
+### When functional testing is REQUIRED
+- Roles, playbooks, and collections: assert the configuration WORKS in practice
+
+### Examples
+
+| Configuration | State Checking (WRONG) | Functional Testing (CORRECT) |
+|--------------|----------------------|---------------------------|
+| Web servers | Check config file exists with correct permissions | `ansible.builtin.wait_for` on TCP socket + HTTP GET request |
+| Security/Identity | Verify `/etc/pam.d/su` file exists | Execute commands to establish a real session and verify OS response |
+| API endpoints | Check systemd service is "started" | `ansible.builtin.uri` to validate response payload structure |
+| Firewall rules | Check iptables rule file exists | Attempt blocked connection and verify rejection |
+
+## Ansible-Native Architecture
+
+Use standard Ansible playbooks, inventory, and collections for the entire test lifecycle. Do NOT use:
+- External Python frameworks (Testinfra)
+- Proprietary DSLs
+- Non-Ansible verification tools
+
+Requirements:
+- Standard declarative YAML syntax with familiar modules
+- Output format: YAML for readability
+- `ANSIBLE_HOST_KEY_CHECKING: false` to prevent CI hangs
+- `pipelining: true` for execution speed
+
+## Inventory and Execution
+
+* Point arguments to `${MOLECULE_SCENARIO_DIRECTORY}/inventory/` absolute paths.
+* Enforce alphabetical file loading for dynamic groups.
+* Static hosts in `01-inventory.yml` (loaded first).
+* Constructed inventory plugins in `02-constructed.yml` (processes static hosts, evaluates conditionals).
+* **Collection testing:** Use `shared_state: true` in base config so multiple scenarios share a single provisioned inventory (avoids massive CI overhead).
+
+## Negative Testing
+
+Validate that systems correctly reject invalid inputs or terminate unstable processes:
+
+* Use `failed_when` to override standard return logic.
+* Register output with `register`.
+* Assert strict pass conditions in `ansible.builtin.assert` with clear `fail_msg`.
+* Use `block`/`rescue` for intentionally destructive tests — catch expected failures in `rescue` to validate security mechanisms.
+
+```yaml
+- name: Verify unauthorized access is denied
+  block:
+    - name: Attempt privileged action as unprivileged user
+      ansible.builtin.command:
+        cmd: systemctl restart critical-service
+      become: false
+      register: unauth_result
+      failed_when: unauth_result.rc == 0
+
+  rescue:
+    - name: Confirm denial was enforced
+      ansible.builtin.assert:
+        that:
+          - unauth_result.rc != 0
+        fail_msg: "Security violation: unprivileged user could restart critical service"
+```
+
+## Documentation Standards
+
+### Scenario README
+
+Each molecule scenario should have documentation (in `molecule/<scenario>/README.md` or as a header comment in `molecule.yml`):
+
+```markdown
+# Scenario: default
+
+## What this tests
+- Service installs and starts correctly
+- Configuration is applied and functional
+- Idempotency (second converge produces no changes)
+
+## Platform requirements
+- Docker driver
+- Requires network access for package installation
+
+## Running
+molecule test
+molecule converge   # Apply without destroy
+molecule verify     # Run verification only
+```
+
+### Verify Playbook Comments
+
+In `verify.yml`, comment each assertion block explaining WHAT business logic is being proven, not what the Ansible task does:
+
+```yaml
+# Prove the web server accepts connections on the configured port
+- name: Verify HTTP response
+  ansible.builtin.uri:
+    url: "http://{{ ansible_host }}:{{ nginx_port }}"
+    status_code: 200
+
+# Prove TLS certificate is valid and matches expected domain
+- name: Verify TLS handshake
+  ansible.builtin.command:
+    cmd: "openssl s_client -connect {{ ansible_host }}:443 -servername {{ domain }}"
+  register: tls_result
+  changed_when: false
+  failed_when: "'Verify return code: 0' not in tls_result.stdout"
+```
