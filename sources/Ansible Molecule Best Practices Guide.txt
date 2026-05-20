@@ -141,7 +141,7 @@ YAML
    - name: Functionally test SSH daemon root login rejection mechanism
      ansible.builtin.command:
        # Utilizing sshpass to simulate an external network authentication attempt
-       cmd: sshpass -p 'dummy_password' ssh -o StrictHostKeyChecking=no root@localhost "echo 'breach_attempt'"
+       cmd: sshpass -p '<EXAMPLE_PASSWORD>' ssh -o StrictHostKeyChecking=no root@localhost "echo 'breach_attempt'"
      register: ssh_auth_attempt
      # The functional test is successful ONLY if the command fails (rc!= 0), indicating rejection
      failed_when: ssh_auth_attempt.rc == 0

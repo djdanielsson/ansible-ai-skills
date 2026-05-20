@@ -3,10 +3,23 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SKILL_FILE="$PROJECT_ROOT/skills/using-ansible-superpowers/SKILL.md"
 
-if [[ ! -f "$SKILL_FILE" ]]; then
-  echo "ERROR: Bootstrap skill not found at $SKILL_FILE" >&2
+# Support both standalone layout (skills/ at project root) and submodule layout (.skills/skills/)
+SKILL_FILE=""
+for candidate in \
+  "$PROJECT_ROOT/skills/using-ansible-superpowers/SKILL.md" \
+  "$PROJECT_ROOT/.skills/skills/using-ansible-superpowers/SKILL.md" \
+  "$SCRIPT_DIR/../skills/using-ansible-superpowers/SKILL.md"; do
+  if [[ -f "$candidate" ]]; then
+    SKILL_FILE="$candidate"
+    break
+  fi
+done
+
+if [[ -z "$SKILL_FILE" ]]; then
+  echo "ERROR: Bootstrap skill not found. Searched:" >&2
+  echo "  $PROJECT_ROOT/skills/using-ansible-superpowers/SKILL.md" >&2
+  echo "  $PROJECT_ROOT/.skills/skills/using-ansible-superpowers/SKILL.md" >&2
   exit 1
 fi
 

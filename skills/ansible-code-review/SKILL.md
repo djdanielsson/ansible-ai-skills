@@ -29,8 +29,9 @@ ansible-lint --profile production .
 # Syntax check all playbooks
 find . -name "*.yml" -path "*/playbooks/*" -exec ansible-playbook --syntax-check {} \;
 
-# FQCN check (all modules should be fully qualified)
-grep -rn "^\s*-\s*name:" --include="*.yml" -A 1 | grep -E "^\s+\w+\.\w+:" | grep -v "\." && echo "WARN: Short module names found"
+# FQCN check (prefer ansible-lint fqcn rule, or use this heuristic)
+ansible-lint -R -r fqcn . 2>/dev/null || \
+  grep -rn "^\s\+\w\+:$" --include="*.yml" roles/ tasks/ | grep -v "\." | grep -v "name:\|when:\|register:\|tags:\|become:\|notify:\|listen:\|block:\|rescue:\|always:\|loop:\|vars:" && echo "WARN: Possible short module names found"
 
 # Verify no secrets in plain text
 grep -rn "password\|secret\|token\|api_key" --include="*.yml" | grep -v "vault\|no_log\|lookup\|{{ " && echo "WARN: Possible plaintext secrets"
