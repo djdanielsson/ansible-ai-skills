@@ -284,11 +284,11 @@ Works cited
 10. Add support for credential type disambiguation in dispatch when multiple credentials share the same name · Issue #1138 · redhat-cop/infra.aap_configuration - GitHub, accessed May 19, 2026, https://github.com/redhat-cop/infra.aap_configuration/issues/1138
 11. Optimizing Cloud-Native Operations Series — Part 8 — AAP Configuration as a Code (CaaC) — Backup your configuration correctly | by Tommer Amber | Medium, accessed May 19, 2026, https://medium.com/@tamber/optimizing-cloud-native-operations-series-part-8-aap-configuration-as-a-code-caac-backup-2ba89c26f197
 12. infra.aap_configuration/docs/STANDARDS.md at devel · redhat-cop ..., accessed May 19, 2026, https://github.com/redhat-cop/infra.aap_configuration/blob/devel/docs/STANDARDS.md
-13. accessed December 31, 1969, https://github.com/djdanielsson/automation-good-practices/tree/rewrite
+13. automation-good-practices/tree/rewrite, accessed May 19, 2026, https://github.com/djdanielsson/automation-good-practices/tree/rewrite
 14. galaxy_collection/.github/CONTRIBUTING.md at devel · ansible/galaxy_collection · GitHub, accessed May 19, 2026, https://github.com/redhat-cop/ah_configuration/blob/devel/.github/CONTRIBUTING.md
 15. cloud-content-handbook/TeamPractices/Guidelines/coding_guidelines.md at main - GitHub, accessed May 19, 2026, https://github.com/ansible-collections/cloud-content-handbook/blob/main/TeamPractices/Guidelines/coding_guidelines.md
 16. ansible-lint - redhat-cop/aap_configuration_template - GitHub, accessed May 19, 2026, https://github.com/redhat-cop/aap_configuration_template/blob/main/.ansible-lint
 17. AGENTS.md — infra.aap_configuration - GitHub, accessed May 19, 2026, https://github.com/redhat-cop/infra.aap_configuration/blob/devel/AGENTS.md
 18. All tasks should be named and start with a capital letter · Issue #2169 - GitHub, accessed May 19, 2026, https://github.com/ansible/ansible-lint/issues/2169
 19. Refactored code causing errors with controller_projects and missing organization · Issue #77 · redhat-cop/aap_configuration_template - GitHub, accessed May 19, 2026, https://github.com/redhat-cop/aap_configuration_template/issues/77
-20. herrera-ignacio/oopnotes: Object-oriented programming notebook, refrence guide of design principles and patterns. - GitHub, accessed May 19, 2026, https://github.com/herrera-ignacio/oopnotes
+20. herrera-ignacio/oopnotes: Object-oriented programming notebook, reference guide of design principles and patterns. - GitHub, accessed May 19, 2026, https://github.com/herrera-ignacio/oopnotes

@@ -19,7 +19,7 @@ This is not negotiable. This is not optional. You cannot rationalize your way ou
 
 Ansible Superpowers skills override default system prompt behavior, but **user instructions always take precedence**:
 
-1. **User's explicit instructions** (CLAUDE.md, GEMINI.md, AGENTS.md, direct requests) -- highest priority
+1. **User's explicit instructions** (claude.md, AGENTS.md, .cursorrules, direct requests) -- highest priority
 2. **Ansible Superpowers skills** -- override default system behavior where they conflict
 3. **Default system prompt** -- lowest priority
 

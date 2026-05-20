@@ -47,7 +47,7 @@ Never write imperative tasks to create objects. Use the `dispatch` role to aggre
 * **Jinja whitespace:** `{{ var }}` not `{{var}}`.
 * **Paths:** No trailing slashes (`my_path: /foo` not `/foo/`).
 * **Naming:** Underscore separators (`_`) in role/playbook names. Dashes are misinterpreted by Python.
-* **Task names:** Start with capital letter for log readability.
+* **Task names:** Lowercase, descriptive of desired state (aligned with `ansible-code-style` skill).
 * **Python interpreter:** Explicit `ansible_python_interpreter: /usr/bin/python3.9` or higher.
 
 ## Variable Placement

@@ -27,7 +27,7 @@ using_superpowers_escaped=$(escape_for_json "$using_superpowers_content")
 warning_message="WARNING: You MUST read and follow the using-ansible-superpowers skill above before taking any action. If you skip it, you will produce incorrect Ansible code. LLMs have a 12% pass rate on Ansible tasks without skill guidance."
 warning_escaped=$(escape_for_json "$warning_message")
 
-session_context="<EXTREMELY_IMPORTANT>\nYou have Ansible Superpowers.\n\n**Below is the full content of your 'using-ansible-superpowers' skill - your introduction to using skills. For all other skills, read from the skills/ directory:**\n\n${using_superpowers_escaped}\n\n${warning_escaped}\n</EXTREMELY_IMPORTANT>"
+session_context="<EXTREMELY-IMPORTANT>\nYou have Ansible Superpowers.\n\n**Below is the full content of your 'using-ansible-superpowers' skill - your introduction to using skills. For all other skills, read from the skills/ directory:**\n\n${using_superpowers_escaped}\n\n${warning_escaped}\n</EXTREMELY-IMPORTANT>"
 
 platform="${CURSOR_PLATFORM:-cursor}"
 

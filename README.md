@@ -25,10 +25,16 @@ This skill system counteracts each failure mode with specific architectural inte
 git clone https://github.com/djdanielsson/skills.git .skills
 ```
 
-2. Copy or symlink the hook config into your project root:
+2. Copy or symlink the hooks directory into your project root:
 
 ```bash
-cp .skills/hooks/hooks-cursor.json ./hooks-cursor.json
+cp -r .skills/hooks ./hooks
+```
+
+Or, if you prefer symlinks:
+
+```bash
+ln -s .skills/hooks ./hooks
 ```
 
 3. Add the skills directory to your Cursor rules or `.cursorrules`:
@@ -47,10 +53,10 @@ Alternatively, reference the `AGENTS.md` file which Cursor reads automatically i
 git clone https://github.com/djdanielsson/skills.git .skills
 ```
 
-2. Copy the hook config:
+2. Copy or symlink the hooks directory:
 
 ```bash
-cp .skills/hooks/hooks.json ./.hooks.json
+cp -r .skills/hooks ./hooks
 ```
 
 3. The session-start hook automatically injects the bootstrap skill at the beginning of every conversation.

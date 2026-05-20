@@ -16,15 +16,17 @@ Zero-trust security model for Ansible automation platforms.
 
 ### The Rule
 
-**No secrets in Git.** Not encrypted in Git. Not "just for dev." Not in comments. Not in variable names that hint at values. NEVER.
+**No plaintext secrets in Git.** Not in comments, not in variable names that hint at values, not "just for dev." NEVER.
+
+Vault-encrypted secrets (`ansible-vault`) are acceptable in Git for local development and non-production workflows. For CI/CD and production, use external secret managers (OCP Secrets, HashiCorp Vault, AAP Credentials).
 
 ### Where Secrets Live
 
 | Environment | Secret Storage | How Accessed |
 |------------|---------------|--------------|
-| **Local dev** | `ansible-vault` encrypted files | `--ask-vault-pass` or vault password file |
-| **CI/CD** | GitHub Secrets / OCP Secrets | Injected as environment variables or mounted files |
-| **AAP** | Controller Credentials | Referenced by name in job templates |
+| **Local dev** | `ansible-vault` encrypted files (committed to Git) | `--ask-vault-pass` or vault password file |
+| **CI/CD** | GitHub Secrets / OCP Secrets (external) | Injected as environment variables or mounted files |
+| **AAP** | Controller Credentials (external) | Referenced by name in job templates |
 | **Kubernetes** | OCP Secret objects (encrypted at rest) | Mounted as files in pods |
 
 ### Vault Usage
@@ -54,7 +56,7 @@ controller_templates:
 controller_templates:
   - name: "Deploy App"
     extra_vars:
-      db_password: "hunter2"
+      db_password: "PLAINTEXT_SECRET_NEVER_DO_THIS"
 ```
 
 ### no_log Usage
