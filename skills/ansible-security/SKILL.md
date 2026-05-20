@@ -36,7 +36,7 @@ Vault-encrypted secrets (`ansible-vault`) are acceptable in Git for local develo
 ansible-vault encrypt group_vars/all/vault.yml
 
 # Encrypt a single string
-ansible-vault encrypt_string 'my_secret_value' --name 'vault_db_password'
+ansible-vault encrypt_string '<YOUR_SECRET>' --name 'vault_db_password'
 ```
 
 Reference vault variables in playbooks:
