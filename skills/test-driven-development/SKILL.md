@@ -43,11 +43,15 @@ Write a Molecule `verify.yml` test that checks for the desired state:
       register: nginx_check
       failed_when: nginx_check.rc != 0
 
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
     - name: Check nginx service is running
-      ansible.builtin.systemd:
-        name: nginx
-      register: nginx_service
-      failed_when: nginx_service.status.ActiveState != "active"
+      ansible.builtin.assert:
+        that:
+          - "'nginx.service' in ansible_facts.services"
+          - "ansible_facts.services['nginx.service'].state == 'running'"
+        fail_msg: "nginx is not running"
 ```
 
 Run `molecule verify` -- it MUST fail. If it passes, your test isn't testing anything new.

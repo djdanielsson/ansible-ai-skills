@@ -70,7 +70,11 @@ cp -r .skills/hooks ./hooks
 1. At the start of any Ansible conversation, paste or reference:
 
 ```
+# Standalone layout:
 Read skills/using-ansible-superpowers/SKILL.md and follow its instructions.
+
+# Submodule layout:
+Read .skills/skills/using-ansible-superpowers/SKILL.md and follow its instructions.
 ```
 
 2. The bootstrap skill will guide the agent to invoke the Ansible Architect, which handles everything else.

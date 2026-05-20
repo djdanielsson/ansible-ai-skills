@@ -4,9 +4,12 @@ This repository provides a Superpowers-style skill system for producing enterpri
 
 ## Getting Started
 
-**Read `skills/using-ansible-superpowers/SKILL.md` FIRST.** This is the bootstrap skill that tells you how to use the entire system. Do not skip it.
+**Read the bootstrap skill FIRST.** This tells you how to use the entire system. Do not skip it.
 
-The **Ansible Architect** (`skills/ansible-architect/SKILL.md`) is your primary orchestrator. It detects project context, activates the correct sub-persona, enforces the State Reasoning Protocol, and manages the full development lifecycle.
+- **Standalone layout:** `skills/using-ansible-superpowers/SKILL.md`
+- **Submodule layout:** `.skills/skills/using-ansible-superpowers/SKILL.md`
+
+The **Ansible Architect** (`skills/ansible-architect/SKILL.md` or `.skills/skills/ansible-architect/SKILL.md`) is your primary orchestrator. It detects project context, activates the correct sub-persona, enforces the State Reasoning Protocol, and manages the full development lifecycle.
 
 ## Why This System Exists
 
