@@ -35,7 +35,7 @@ For operational playbooks, which orchestrate infrastructure landscapes rather th
 
 
 Bash
-ansible-creator init playbook mytest.playbook./my_playbook_dir
+ansible-creator init playbook mytest.playbook ./my_playbook_dir
 
 .10
 Furthermore, recognizing the rapid integration of artificial intelligence into software development, recent iterations of ansible-creator auto-generate an AGENTS.md file alongside a .claude/skills directory.15 These structures provide a standardized entry point for AI agents to understand the repository's context, contributing guidelines, and automation intent. For instance, the generated scaffolding includes skills for creating conventional commits with fully qualified collection names (FQCN) scopes, allowing AI assistants to split changed files into focused commits per collection component.16

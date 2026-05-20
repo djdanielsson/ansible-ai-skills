@@ -6,10 +6,11 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Support both standalone layout (skills/ at project root) and submodule layout (.skills/skills/)
 SKILL_FILE=""
-for candidate in \
-  "$PROJECT_ROOT/skills/using-ansible-superpowers/SKILL.md" \
-  "$PROJECT_ROOT/.skills/skills/using-ansible-superpowers/SKILL.md" \
-  "$SCRIPT_DIR/../skills/using-ansible-superpowers/SKILL.md"; do
+CANDIDATES=(
+  "$PROJECT_ROOT/skills/using-ansible-superpowers/SKILL.md"
+  "$PROJECT_ROOT/.skills/skills/using-ansible-superpowers/SKILL.md"
+)
+for candidate in "${CANDIDATES[@]}"; do
   if [[ -f "$candidate" ]]; then
     SKILL_FILE="$candidate"
     break
@@ -18,8 +19,9 @@ done
 
 if [[ -z "$SKILL_FILE" ]]; then
   echo "ERROR: Bootstrap skill not found. Searched:" >&2
-  echo "  $PROJECT_ROOT/skills/using-ansible-superpowers/SKILL.md" >&2
-  echo "  $PROJECT_ROOT/.skills/skills/using-ansible-superpowers/SKILL.md" >&2
+  for candidate in "${CANDIDATES[@]}"; do
+    echo "  $candidate" >&2
+  done
   exit 1
 fi
 
