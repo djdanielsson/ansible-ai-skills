@@ -37,13 +37,17 @@ Or, if you prefer symlinks:
 ln -s .skills/hooks ./hooks
 ```
 
-3. Add the skills directory to your Cursor rules or `.cursorrules`:
+3. Copy `AGENTS.md` to your project root so Cursor picks it up automatically:
+
+```bash
+cp .skills/AGENTS.md ./AGENTS.md
+```
+
+Or add to your `.cursorrules`:
 
 ```
 Read and follow .skills/skills/using-ansible-superpowers/SKILL.md before any Ansible work.
 ```
-
-Alternatively, reference the `AGENTS.md` file which Cursor reads automatically if present at the project root.
 
 ### Claude Code
 

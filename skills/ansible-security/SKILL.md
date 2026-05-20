@@ -31,14 +31,17 @@ Vault-encrypted secrets (`ansible-vault`) are acceptable in Git for local develo
 
 ### Vault Usage
 
-```yaml
+```bash
 # Encrypt a variable file
 ansible-vault encrypt group_vars/all/vault.yml
 
 # Encrypt a single string
 ansible-vault encrypt_string 'my_secret_value' --name 'vault_db_password'
+```
 
-# Reference in playbooks
+Reference vault variables in playbooks:
+
+```yaml
 db_password: "{{ vault_db_password }}"
 ```
 

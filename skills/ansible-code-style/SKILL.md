@@ -103,15 +103,15 @@ template:
 systemd:
 ```
 
-### Descriptive task names (lowercase, describes desired state)
+### Descriptive task names (sentence case, describes desired state)
 
 ```yaml
-# Good
+# Good -- sentence case, descriptive
 - name: Install Apache web server
 - name: Enable and start nginx service
 - name: Deploy application configuration
 
-# Bad
+# Bad -- vague, non-descriptive
 - name: Install package
 - name: Run command
 - name: Step 3
