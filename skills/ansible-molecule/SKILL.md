@@ -128,13 +128,14 @@ For stateful software validation, intersperse verify and side_effect actions:
 scenario:
   test_sequence:
     - converge
+    - idempotence               # Proves convergent state before disruption
     - verify                    # Validates initial deployment
     - side_effect               # Simulates reboot or process crash
+    - converge                  # Re-converge to restore state
     - verify                    # Proves auto-recovery
-    - idempotence               # Proves convergent state
 ```
 
-This catches bugs that single-verify pipelines miss (e.g., services not surviving reboot).
+This catches bugs that single-verify pipelines miss (e.g., services not surviving reboot). Note: `idempotence` runs before `side_effect` to test convergence on a clean state, and `converge` re-runs after `side_effect` to restore state before the recovery `verify`.
 
 ## Collection Testing with Shared State
 
