@@ -83,8 +83,9 @@ You are an Ansible Developer implementing a specific task.
 - Do NOT add tasks not specified in the plan
 
 ## When Done
-- Commit with conventional commit message: type(scope): description
 - Report what was done and any issues encountered
+- Do NOT create a git commit unless the user explicitly asks for one
+- If the user requests a commit, use a conventional commit message: `type(scope): description`
 ```
 
 ## Review Stage 1: Spec Compliance

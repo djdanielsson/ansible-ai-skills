@@ -25,17 +25,16 @@ This skill system counteracts each failure mode with specific architectural inte
 git clone https://github.com/<your-org>/ansible-ai-skills.git .skills
 ```
 
-2. Copy or symlink the hooks directory into your project root:
+2. Install the project hook files into `.cursor/`:
 
 ```bash
-cp -r .skills/hooks ./hooks
+mkdir -p .cursor/hooks
+cp .skills/.cursor/hooks.json .cursor/hooks.json
+cp .skills/.cursor/hooks/session-start .cursor/hooks/session-start
+chmod +x .cursor/hooks/session-start
 ```
 
-Or, if you prefer symlinks:
-
-```bash
-ln -s .skills/hooks ./hooks
-```
+If you already have `.cursor/hooks.json`, merge the `sessionStart` entry instead of overwriting the file.
 
 3. Copy `AGENTS.md` to your project root so Cursor picks it up automatically:
 
@@ -57,11 +56,16 @@ Read and follow .skills/skills/using-ansible-superpowers/SKILL.md before any Ans
 git clone https://github.com/<your-org>/ansible-ai-skills.git .skills
 ```
 
-2. Copy or symlink the hooks directory:
+2. Install the project hook settings and shared session-start script:
 
 ```bash
-cp -r .skills/hooks ./hooks
+mkdir -p .claude .cursor/hooks
+cp .skills/.claude/settings.json .claude/settings.json
+cp .skills/.cursor/hooks/session-start .cursor/hooks/session-start
+chmod +x .cursor/hooks/session-start
 ```
+
+If you already have `.claude/settings.json`, merge the `SessionStart` hook instead of overwriting the file.
 
 3. The session-start hook automatically injects the bootstrap skill at the beginning of every conversation.
 
@@ -160,13 +164,17 @@ Session Start
 
 ```
 .
+├── .claude/
+│   └── settings.json          # Claude Code project hook config
+├── .cursor/
+│   ├── hooks.json             # Cursor project hook config
+│   └── hooks/
+│       └── session-start      # Session bootstrap hook script
 ├── AGENTS.md                  # Agent instructions (Cursor/Copilot)
 ├── claude.md                  # Agent instructions (Claude Code)
 ├── README.md                  # This file
 ├── hooks/
-│   ├── session-start          # Bootstrap script
-│   ├── hooks.json             # Claude Code hook config
-│   └── hooks-cursor.json      # Cursor hook config
+│   └── session-start          # Backward-compatible bootstrap script
 ├── skills/
 │   ├── using-ansible-superpowers/   # Bootstrap skill
 │   ├── ansible-architect/           # Orchestrator

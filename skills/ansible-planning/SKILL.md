@@ -109,12 +109,11 @@ Expected: 0 violations
 molecule converge && molecule verify
 ```
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 7: Checkpoint with the user**
 
-```bash
-git add roles/role_name/
-git commit -m "feat(role_name): add package installation task"
-```
+Summarize what changed, which validation steps passed, and whether the task is ready for a commit.
+
+Only create a git commit if the user explicitly asks for one.
 ````
 
 ## Idempotency Proof Steps
