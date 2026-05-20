@@ -22,7 +22,7 @@ This skill system counteracts each failure mode with specific architectural inte
 1. Clone or copy this repository into your project (or reference it as a submodule):
 
 ```bash
-git clone https://github.com/djdanielsson/skills.git .skills
+git clone https://github.com/<your-org>/ansible-ai-skills.git .skills
 ```
 
 2. Copy or symlink the hooks directory into your project root:
@@ -54,7 +54,7 @@ Read and follow .skills/skills/using-ansible-superpowers/SKILL.md before any Ans
 1. Clone or copy this repository:
 
 ```bash
-git clone https://github.com/djdanielsson/skills.git .skills
+git clone https://github.com/<your-org>/ansible-ai-skills.git .skills
 ```
 
 2. Copy or symlink the hooks directory:

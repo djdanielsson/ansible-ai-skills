@@ -46,7 +46,7 @@ Never write imperative tasks to create objects. Use the `dispatch` role to aggre
 * **File extension:** `.yml` only. Never `.yaml`.
 * **Jinja whitespace:** `{{ var }}` not `{{var}}`.
 * **Paths:** No trailing slashes (`my_path: /foo` not `/foo/`).
-* **Naming:** Underscore separators (`_`) in role/playbook names. Dashes are misinterpreted by Python.
+* **Naming:** Underscore separators (`_`) in variable names. Dashes in Jinja/Python expressions are parsed as subtraction. Role and playbook filenames may use dashes or underscores per project convention.
 * **Task names:** Sentence case, descriptive of desired state (aligned with `ansible-code-style` skill).
 * **Python interpreter:** Explicit `ansible_python_interpreter: /usr/bin/python3.9` or higher.
 

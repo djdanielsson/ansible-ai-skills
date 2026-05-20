@@ -74,7 +74,7 @@ grep -rn "password\|secret\|token\|api_key" --include="*.yml" | grep -v "vault\|
 - [ ] `ansible.builtin.fail` with clear `msg:` for precondition failures
 
 ### Style (per ansible-code-style skill)
-- [ ] Task names are descriptive (lowercase, explains state)
+- [ ] Task names are descriptive (sentence case, explains desired state)
 - [ ] YAML uses consistent indentation (2 spaces)
 - [ ] `true` / `false` not `yes` / `no`
 - [ ] Jinja2 has spaces inside braces: `{{ var }}` not `{{var}}`
