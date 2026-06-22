@@ -1,10 +1,11 @@
 ---
-name: ansible-architect
+name: ansible-architecture
 description: >-
   Enterprise Ansible architecture and development standards. Use when writing
   or reviewing playbooks, roles, collections, or inventories. Covers
   idempotency, role engineering, orchestration, collections, variable
-  management, linting, and security. Use eagerly for any Ansible task.
+  management, linting, security, and APME policy compliance. Use eagerly
+  for any Ansible task. Referenced by the ansible-architect orchestrator.
 ---
 # Enterprise Ansible Architecture
 
@@ -120,10 +121,33 @@ When using either, you MUST:
 
 ## Security
 
-* **NEVER hardcode secrets.** Use Ansible Vault or external secret managers.
+* **NEVER hardcode secrets.** Use Ansible Vault or external secret managers. See `ansible-security` skill for comprehensive guidance.
 * **`no_log: true`** on any task handling secrets.
 * **`validate_certs: true`** always (never `false` unless explicitly instructed for isolated test).
 * **Use current module names.** Avoid deprecated aliases.
+
+## APME Policy Compliance
+
+The Ansible Policy and Migration Engine enforces architectural compliance through multi-validator static analysis:
+
+| Validator | Checks |
+|-----------|--------|
+| Python Validator | Module structure, import patterns, deprecated APIs |
+| Ansible-Runtime | FQCN usage, module compatibility, collection requirements |
+| OPA Rego | Policy rules: no `ignore_errors` without justification, no `shell` without `changed_when` |
+| Gitleaks | Secret patterns in all files |
+
+All code must pass APME validation before merge.
+
+## Constitutional Compliance
+
+All automation must comply with these governing principles:
+
+* **GitOps First:** All configuration must be declarative and stored in Git. No manual changes.
+* **Separation of Duties:** Platform operations and application operations separated.
+* **Atomic Promotion:** Components promoted together as a version-locked unit.
+* **Production-Grade Quality:** Idempotent, tested, documented.
+* **Zero-Trust Security:** No secrets in Git, least-privilege access.
 
 ## AAP/AWX Operational Rules
 

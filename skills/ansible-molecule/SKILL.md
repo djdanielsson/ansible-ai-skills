@@ -3,8 +3,9 @@ name: ansible-molecule
 description: >-
   Ansible Molecule testing best practices. Use when writing or reviewing
   Molecule test scenarios. Covers functional verification over state checking,
-  ansible-native testing architecture, inventory optimization, and negative
-  testing patterns.
+  ansible-native testing architecture, inventory optimization, negative
+  testing, multi-test sequences, shared state for collections, and CI
+  integration patterns. Referenced by the ansible-architect orchestrator.
 ---
 # Ansible Molecule Testing
 
@@ -117,4 +118,86 @@ In `verify.yml`, comment each assertion block explaining WHAT business logic is 
   register: tls_result
   changed_when: false
   failed_when: "'Verify return code: 0' not in tls_result.stdout"
+```
+
+## Multi-Test Sequences
+
+For stateful software validation, intersperse verify and side_effect actions:
+
+```yaml
+scenario:
+  test_sequence:
+    - converge
+    - idempotence               # Proves convergent state before disruption
+    - verify                    # Validates initial deployment
+    - side_effect               # Simulates reboot or process crash
+    - converge                  # Re-converge to restore state
+    - verify                    # Proves auto-recovery
+```
+
+This catches bugs that single-verify pipelines miss (e.g., services not surviving reboot). Note: `idempotence` runs before `side_effect` to test convergence on a clean state, and `converge` re-runs after `side_effect` to restore state before the recovery `verify`.
+
+## Collection Testing with Shared State
+
+For collections with multiple roles, use `shared_state: true` to avoid provisioning separate infrastructure per scenario:
+
+```yaml
+# extensions/molecule/config.yml
+shared_state: true
+```
+
+The `default` scenario owns `create` and `destroy`. Component scenarios inherit provisioned infrastructure and run only `prepare`, `converge`, and `verify`.
+
+## CI Integration
+
+In CI pipelines, run all Molecule scenarios in parallel:
+
+```yaml
+# GitHub Actions matrix strategy
+strategy:
+  matrix:
+    scenario: [default, centos, ubuntu]
+  fail-fast: false
+```
+
+Always use `molecule test` (full lifecycle including idempotence) in CI, not just `molecule converge`.
+
+## Common Verification Patterns
+
+### Package installed
+```yaml
+- name: Verify package
+  ansible.builtin.package_facts:
+    manager: auto
+- name: Assert package present
+  ansible.builtin.assert:
+    that: "'nginx' in ansible_facts.packages"
+```
+
+### Service running
+```yaml
+- name: Get service facts
+  ansible.builtin.service_facts:
+- name: Assert service active
+  ansible.builtin.assert:
+    that: "ansible_facts.services['nginx.service'].state == 'running'"
+```
+
+### Port listening
+```yaml
+- name: Check port is listening
+  ansible.builtin.wait_for:
+    port: 80
+    timeout: 5
+```
+
+### File content
+```yaml
+- name: Read config file
+  ansible.builtin.slurp:
+    src: /etc/nginx/nginx.conf
+  register: config_content
+- name: Assert config contains expected setting
+  ansible.builtin.assert:
+    that: "'worker_processes auto;' in config_content.content | b64decode"
 ```
